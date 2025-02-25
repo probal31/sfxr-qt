@@ -12,7 +12,7 @@ ApplicationWindow {
     minimumWidth: leftColumn.width + mainContent.implicitWidth + fileActions.width + 2 * margin
 
     property real margin: 12
-    property real sideColumnWidth: 200
+    property real sideColumnWidth: 100
     property real columnWidth: 350
     property Sound sound: {
         var row = soundListView.currentIndex;
@@ -36,17 +36,13 @@ ApplicationWindow {
         }
     }
 
-    Item {
+    RowLayout {
         id: rootItem
         anchors.fill: parent
         ColumnLayout {
             id: leftColumn
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-            }
-            width: sideColumnWidth
+            Layout.preferredWidth: sideColumnWidth
+            Layout.fillHeight: true
 
             Generators {
                 id: generators
@@ -69,15 +65,8 @@ ApplicationWindow {
 
         ColumnLayout {
             id: mainContent
-            anchors {
-                left: leftColumn.right
-                right: fileActions.left
-                top: parent.top
-                bottom: parent.bottom
-                leftMargin: margin
-                rightMargin: margin
-            }
-            Layout.minimumWidth: implicitWidth
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
             RowLayout {
                 id: waveFormRow
@@ -94,185 +83,199 @@ ApplicationWindow {
             SoundPreview {
                 soundPlayer: soundPlayer
                 Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.maximumHeight: parent.height / 4
+                Layout.preferredHeight: 100
             }
 
             VerticalSpacer {}
 
-            Row {
-                spacing: margin * 2
-
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-
-                ColumnLayout {
-                    width: root.columnWidth
-
-                    SliderGroup {
-                        Layout.fillWidth: true
-                        text: qsTr("Envelop")
-                        sound: root.sound
-                        model: ListModel {
-                            ListElement {
-                                text: qsTr("Attack time")
-                                soundProperty: "attackTime"
-                            }
-                            ListElement {
-                                text: qsTr("Sustain time")
-                                soundProperty: "sustainTime"
-                            }
-                            ListElement {
-                                text: qsTr("Sustain punch")
-                                soundProperty: "sustainPunch"
-                            }
-                            ListElement {
-                                text: qsTr("Decay time")
-                                soundProperty: "decayTime"
-                            }
-                        }
-                    }
-
-                    SliderGroup {
-                        Layout.fillWidth: true
-                        text: qsTr("Frequency")
-                        sound: root.sound
-                        model: ListModel {
-                            ListElement {
-                                text: qsTr("Start frequency")
-                                soundProperty: "baseFrequency"
-                            }
-                            ListElement {
-                                text: qsTr("Min frequency")
-                                soundProperty: "minFrequency"
-                            }
-                            ListElement {
-                                text: qsTr("Slide")
-                                soundProperty: "slide"
-                                bipolar: true
-                            }
-                            ListElement {
-                                text: qsTr("Delta slide")
-                                soundProperty: "deltaSlide"
-                                bipolar: true
-                            }
-                            ListElement {
-                                text: qsTr("Vibrato depth")
-                                soundProperty: "vibratoDepth"
-                            }
-                            ListElement {
-                                text: qsTr("Vibrato speed")
-                                soundProperty: "vibratoSpeed"
-                            }
-                        }
-                    }
-
-                    SliderGroup {
-                        Layout.fillWidth: true
-                        text: qsTr("Change")
-                        sound: root.sound
-                        model: ListModel {
-                            ListElement {
-                                text: qsTr("Change amount")
-                                soundProperty: "changeAmount"
-                                bipolar: true
-                            }
-                            ListElement {
-                                text: qsTr("Change speed")
-                                soundProperty: "changeSpeed"
-                            }
-                        }
-                    }
+            Flickable {
+                id: flickable
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                contentWidth: sliderContainer.width
+                contentHeight: sliderContainer.height
+                clip: true
+                ScrollBar.vertical: ScrollBar {
+                    parent: flickable.parent
+                    anchors.top: flickable.top
+                    anchors.right: flickable.right
+                    anchors.bottom: flickable.bottom
+                    policy: ScrollBar.AlwaysOn
                 }
 
-                ColumnLayout {
-                    width: root.columnWidth
+                RowLayout {
+                    id: sliderContainer
+                    spacing: margin * 2
+                    width: flickable.width
 
-                    SliderGroup {
-                        Layout.fillWidth: true
-                        enabled: Number(sound.waveForm) === WaveForm.Square
-                        text: qsTr("Square")
-                        sound: root.sound
-                        model: ListModel {
-                            ListElement {
-                                text: qsTr("Square duty")
-                                soundProperty: "squareDuty"
+                    ColumnLayout {
+                        Layout.preferredWidth: sliderContainer.width / 2
+                        SliderGroup {
+                            Layout.fillWidth: true
+                            text: qsTr("Envelop")
+                            sound: root.sound
+                            model: ListModel {
+                                ListElement {
+                                    text: qsTr("Attack time")
+                                    soundProperty: "attackTime"
+                                }
+                                ListElement {
+                                    text: qsTr("Sustain time")
+                                    soundProperty: "sustainTime"
+                                }
+                                ListElement {
+                                    text: qsTr("Sustain punch")
+                                    soundProperty: "sustainPunch"
+                                }
+                                ListElement {
+                                    text: qsTr("Decay time")
+                                    soundProperty: "decayTime"
+                                }
                             }
-                            ListElement {
-                                text: qsTr("Duty sweep")
-                                soundProperty: "dutySweep"
-                                bipolar: true
+                        }
+
+                        SliderGroup {
+                            Layout.fillWidth: true
+                            text: qsTr("Frequency")
+                            sound: root.sound
+                            model: ListModel {
+                                ListElement {
+                                    text: qsTr("Start frequency")
+                                    soundProperty: "baseFrequency"
+                                }
+                                ListElement {
+                                    text: qsTr("Min frequency")
+                                    soundProperty: "minFrequency"
+                                }
+                                ListElement {
+                                    text: qsTr("Slide")
+                                    soundProperty: "slide"
+                                    bipolar: true
+                                }
+                                ListElement {
+                                    text: qsTr("Delta slide")
+                                    soundProperty: "deltaSlide"
+                                    bipolar: true
+                                }
+                                ListElement {
+                                    text: qsTr("Vibrato depth")
+                                    soundProperty: "vibratoDepth"
+                                }
+                                ListElement {
+                                    text: qsTr("Vibrato speed")
+                                    soundProperty: "vibratoSpeed"
+                                }
+                            }
+                        }
+
+                        SliderGroup {
+                            Layout.fillWidth: true
+                            text: qsTr("Change")
+                            sound: root.sound
+                            model: ListModel {
+                                ListElement {
+                                    text: qsTr("Change amount")
+                                    soundProperty: "changeAmount"
+                                    bipolar: true
+                                }
+                                ListElement {
+                                    text: qsTr("Change speed")
+                                    soundProperty: "changeSpeed"
+                                }
                             }
                         }
                     }
 
-                    SliderGroup {
-                        Layout.fillWidth: true
-                        text: qsTr("Repeat")
-                        sound: root.sound
-                        model: ListModel {
-                            ListElement {
-                                text: qsTr("Repeat speed")
-                                soundProperty: "repeatSpeed"
+                    ColumnLayout {
+                        Layout.preferredWidth: sliderContainer.width / 2
+
+                        SliderGroup {
+                            Layout.fillWidth: true
+                            enabled: Number(sound.waveForm) === WaveForm.Square
+                            text: qsTr("Square")
+                            sound: root.sound
+                            model: ListModel {
+                                ListElement {
+                                    text: qsTr("Square duty")
+                                    soundProperty: "squareDuty"
+                                }
+                                ListElement {
+                                    text: qsTr("Duty sweep")
+                                    soundProperty: "dutySweep"
+                                    bipolar: true
+                                }
                             }
                         }
-                    }
 
-                    SliderGroup {
-                        Layout.fillWidth: true
-                        text: qsTr("Phaser")
-                        sound: root.sound
-                        model: ListModel {
-                            ListElement {
-                                text: qsTr("Phaser offset")
-                                soundProperty: "phaserOffset"
-                                bipolar: true
-                            }
-                            ListElement {
-                                text: qsTr("Phaser sweep")
-                                soundProperty: "phaserSweep"
-                                bipolar: true
+                        SliderGroup {
+                            Layout.fillWidth: true
+                            text: qsTr("Repeat")
+                            sound: root.sound
+                            model: ListModel {
+                                ListElement {
+                                    text: qsTr("Repeat speed")
+                                    soundProperty: "repeatSpeed"
+                                }
                             }
                         }
-                    }
 
-                    SliderGroup {
-                        Layout.fillWidth: true
-                        text: qsTr("Filters")
-                        sound: root.sound
-                        model: ListModel {
-                            ListElement {
-                                text: qsTr("LP filter cutoff")
-                                soundProperty: "lpFilterCutoff"
-                            }
-                            ListElement {
-                                text: qsTr("LP filter cutoff sweep")
-                                soundProperty: "lpFilterCutoffSweep"
-                                bipolar: true
-                            }
-                            ListElement {
-                                text: qsTr("LP filter resonance")
-                                soundProperty: "lpFilterResonance"
-                            }
-                            ListElement {
-                                text: qsTr("HP filter cutoff")
-                                soundProperty: "hpFilterCutoff"
-                            }
-                            ListElement {
-                                text: qsTr("HP filter cutoff sweep")
-                                soundProperty: "hpFilterCutoffSweep"
-                                bipolar: true
+                        SliderGroup {
+                            Layout.fillWidth: true
+                            text: qsTr("Phaser")
+                            sound: root.sound
+                            model: ListModel {
+                                ListElement {
+                                    text: qsTr("Phaser offset")
+                                    soundProperty: "phaserOffset"
+                                    bipolar: true
+                                }
+                                ListElement {
+                                    text: qsTr("Phaser sweep")
+                                    soundProperty: "phaserSweep"
+                                    bipolar: true
+                                }
                             }
                         }
-                    }
 
-                    SliderGroup {
-                        Layout.fillWidth: true
-                        text: qsTr("Others")
-                        sound: root.sound
-                        model: ListModel {
-                            ListElement {
-                                text: qsTr("Volume")
-                                soundProperty: "volume"
+                        SliderGroup {
+                            Layout.fillWidth: true
+                            text: qsTr("Filters")
+                            sound: root.sound
+                            model: ListModel {
+                                ListElement {
+                                    text: qsTr("LP filter cutoff")
+                                    soundProperty: "lpFilterCutoff"
+                                }
+                                ListElement {
+                                    text: qsTr("LP filter cutoff sweep")
+                                    soundProperty: "lpFilterCutoffSweep"
+                                    bipolar: true
+                                }
+                                ListElement {
+                                    text: qsTr("LP filter resonance")
+                                    soundProperty: "lpFilterResonance"
+                                }
+                                ListElement {
+                                    text: qsTr("HP filter cutoff")
+                                    soundProperty: "hpFilterCutoff"
+                                }
+                                ListElement {
+                                    text: qsTr("HP filter cutoff sweep")
+                                    soundProperty: "hpFilterCutoffSweep"
+                                    bipolar: true
+                                }
+                            }
+                        }
+
+                        SliderGroup {
+                            Layout.fillWidth: true
+                            text: qsTr("Others")
+                            sound: root.sound
+                            model: ListModel {
+                                ListElement {
+                                    text: qsTr("Volume")
+                                    soundProperty: "volume"
+                                }
                             }
                         }
                     }
@@ -280,6 +283,8 @@ ApplicationWindow {
             }
 
             PlayBar {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 100
                 Layout.alignment: Qt.AlignHCenter
                 soundPlayer: soundPlayer
             }
@@ -288,11 +293,8 @@ ApplicationWindow {
         FileActions {
             id: fileActions
             sound: root.sound
-            anchors {
-                right: parent.right
-                top: parent.top
-            }
-            width: sideColumnWidth
+            Layout.preferredWidth: sideColumnWidth
+            Layout.fillHeight: true
         }
     }
 

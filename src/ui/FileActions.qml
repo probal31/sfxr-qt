@@ -8,6 +8,7 @@ import sfxr 1.0
 ColumnLayout {
     id: root
     property Sound sound
+    Layout.alignment: Qt.AlignTop
 
     TitleLabel {
         text: qsTr("File")
