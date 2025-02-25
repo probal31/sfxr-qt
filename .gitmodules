@@ -4,3 +4,7 @@
 [submodule "3rdparty/catch2"]
 	path = 3rdparty/catch2
 	url = https://github.com/catchorg/Catch2
+[submodule "3rdparty/SDL"]
+	path = 3rdparty/SDL
+	url = https://github.com/libsdl-org/SDL.git
+	branch = SDL2

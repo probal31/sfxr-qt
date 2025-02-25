@@ -32,10 +32,9 @@ add_library(${APPLIB_NAME} STATIC
 target_include_directories(${APPLIB_NAME}
     PUBLIC core
     PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/core
-    PRIVATE ${SDL_INCLUDE_DIR}
 )
 target_link_libraries(${APPLIB_NAME}
-    SDL
+    SDL2::SDL2
     Qt5::Qml
     Qt5::Concurrent
     Qt5::Core

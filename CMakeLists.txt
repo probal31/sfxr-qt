@@ -22,7 +22,6 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(Qt5 CONFIG REQUIRED Gui Quick Widgets Concurrent Test)
 find_package(ECM REQUIRED NO_MODULE)
 list(APPEND CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
-find_package(SDL REQUIRED)
 include(3rdparty/qpropgen/cmake/qpropgen.cmake)
 
 # Build flags
@@ -35,6 +34,8 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
 # Source dirs
+add_subdirectory(3rdparty/SDL EXCLUDE_FROM_ALL)
+
 if (USE_SYSTEM_CATCH2)
    find_package(Catch2 REQUIRED)
 else()
