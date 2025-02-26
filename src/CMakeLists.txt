@@ -34,7 +34,7 @@ target_include_directories(${APPLIB_NAME}
     PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/core
 )
 target_link_libraries(${APPLIB_NAME}
-    SDL2::SDL2
+    SDL2::SDL2-static
     Qt5::Qml
     Qt5::Concurrent
     Qt5::Core
